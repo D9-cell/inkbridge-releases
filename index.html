@@ -12,16 +12,16 @@
   :root {
     color-scheme: light dark;
     --bg: #f5f6fb; --bg2: #eceffa; --fg: #121420; --dim: #5a6072; --faint: #8b90a0;
-    --card: rgba(255, 255, 255, .78); --line: rgba(20, 24, 40, .09);
-    --accent: #3352e0; --accent2: #7b5cff; --on-accent: #fff; --soft: #e6eaff; --ok: #1f9d5c;
+    --card: rgba(255, 255, 255, .8); --line: rgba(20, 24, 40, .09);
+    --accent: #3352e0; --accent2: #7b5cff; --teal: #12a89c; --on-accent: #fff; --soft: #e6eaff; --ok: #1f9d5c;
     --shadow: 0 18px 50px -24px rgba(30, 40, 90, .35);
     --ease: cubic-bezier(.2, .7, .1, 1);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #0c0e16; --bg2: #11152a; --fg: #eef0f8; --dim: #a2a8bc; --faint: #707690;
-      --card: rgba(24, 28, 44, .72); --line: rgba(255, 255, 255, .08);
-      --accent: #8ea4ff; --accent2: #b49bff; --on-accent: #0b1030; --soft: #1b2142; --ok: #5cd394;
+      --card: rgba(24, 28, 44, .74); --line: rgba(255, 255, 255, .08);
+      --accent: #8ea4ff; --accent2: #b49bff; --teal: #4fd8c9; --on-accent: #0b1030; --soft: #1b2142; --ok: #5cd394;
       --shadow: 0 18px 50px -24px rgba(0, 0, 0, .7);
     }
   }
@@ -29,40 +29,50 @@
   html { scroll-behavior: smooth; }
   body { margin: 0; background: var(--bg); color: var(--fg); font: 16.5px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
   a { color: inherit; text-decoration: none; }
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 100%; z-index: 30; background: linear-gradient(90deg, var(--accent), var(--accent2), var(--teal)); transform-origin: 0 50%; transform: scaleX(0); }
 
   .blobs { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
   .blobs i { position: absolute; width: 46vmax; height: 46vmax; border-radius: 50%; filter: blur(70px); opacity: .5; animation: drift 22s ease-in-out infinite alternate; }
   .blobs i:nth-child(1) { background: color-mix(in srgb, var(--accent) 45%, transparent); top: -18vmax; left: -12vmax; }
   .blobs i:nth-child(2) { background: color-mix(in srgb, var(--accent2) 40%, transparent); top: 10vmax; right: -20vmax; animation-duration: 28s; animation-delay: -6s; }
-  .blobs i:nth-child(3) { background: color-mix(in srgb, #22c3b5 28%, transparent); bottom: -24vmax; left: 20vmax; animation-duration: 32s; animation-delay: -12s; }
+  .blobs i:nth-child(3) { background: color-mix(in srgb, var(--teal) 28%, transparent); bottom: -24vmax; left: 20vmax; animation-duration: 32s; animation-delay: -12s; }
   @keyframes drift { to { transform: translate(6vmax, 5vmax) scale(1.12); } }
 
-  nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: color-mix(in srgb, var(--bg) 70%, transparent); border-bottom: 1px solid var(--line); }
+  nav { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: color-mix(in srgb, var(--bg) 70%, transparent); border-bottom: 1px solid var(--line); }
   nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; letter-spacing: -.01em; }
-  .brand img { width: 32px; height: 32px; border-radius: 9px; }
+  .brand img { width: 32px; height: 32px; border-radius: 9px; transition: transform .6s var(--ease); }
+  .brand:hover img { transform: rotate(-12deg) scale(1.08); }
   .chip { font-size: .8rem; padding: 4px 10px; border-radius: 999px; background: var(--soft); color: var(--accent); font-weight: 600; }
   nav .links { display: flex; gap: 22px; font-size: .92rem; color: var(--dim); }
+  nav .links a { position: relative; }
+  nav .links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; border-radius: 2px; background: var(--accent); transform: scaleX(0); transition: transform .35s var(--ease); }
   nav .links a:hover { color: var(--fg); }
+  nav .links a:hover::after { transform: scaleX(1); }
+  nav .get { padding: 8px 14px; border-radius: 10px; background: var(--fg); color: var(--bg); font-weight: 600; font-size: .88rem; }
 
-  .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; padding: 72px 0 40px; }
+  .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; padding: 72px 0 34px; }
   .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; color: var(--accent); font-weight: 600; background: var(--soft); padding: 6px 12px; border-radius: 999px; }
-  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 60%, transparent); animation: pulse 2.2s infinite; }
-  @keyframes pulse { 70% { box-shadow: 0 0 0 9px transparent; } }
-  h1 { font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.03; letter-spacing: -.035em; margin: 18px 0 14px; }
-  h1 em { font-style: normal; background: linear-gradient(100deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); animation: pulse 2.2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 60%, transparent); } 70%, 100% { box-shadow: 0 0 0 9px transparent; } }
+  h1 { font-size: clamp(2.4rem, 6vw, 4.1rem); line-height: 1.04; letter-spacing: -.035em; margin: 18px 0 14px; }
+  .rotor { display: inline-grid; vertical-align: bottom; overflow: hidden; height: 1.12em; }
+  .rotor span { grid-area: 1 / 1; background: linear-gradient(100deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; transform: translateY(110%); opacity: 0; transition: transform .6s var(--ease), opacity .6s var(--ease); }
+  .rotor span.on { transform: none; opacity: 1; }
+  .rotor span.off { transform: translateY(-110%); opacity: 0; }
+  .no-js .rotor span:first-child, .rotor:not(.live) span:first-child { transform: none; opacity: 1; }
   .lead { font-size: 1.12rem; color: var(--dim); max-width: 34rem; margin: 0; }
   .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; align-items: center; }
-  .btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: 14px; font-weight: 650; border: 1px solid transparent; transition: transform .35s var(--ease), box-shadow .35s var(--ease), background .3s; cursor: pointer; font-size: 1rem; }
+  .btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: 14px; font-weight: 650; border: 1px solid transparent; transition: transform .35s var(--ease), box-shadow .35s var(--ease); cursor: pointer; font-size: 1rem; }
   .btn.primary { background: linear-gradient(100deg, var(--accent), var(--accent2)); color: var(--on-accent); box-shadow: 0 14px 34px -14px color-mix(in srgb, var(--accent) 70%, transparent); }
-  .btn.primary::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .35) 50%, transparent 70%); transform: translateX(-120%); transition: transform .8s var(--ease); }
-  .btn.primary:hover::after { transform: translateX(120%); }
+  .btn.primary::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .35) 50%, transparent 70%); transform: translateX(-120%); animation: shine 4.5s var(--ease) 2s infinite; }
+  @keyframes shine { 0%, 70% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
   .btn:hover { transform: translateY(-2px); }
   .btn.ghost { border-color: var(--line); background: var(--card); color: var(--fg); }
   .btn small { display: block; font-weight: 500; font-size: .78rem; opacity: .85; }
   .btn svg { flex: none; }
-  .cta .note { font-size: .88rem; color: var(--faint); }
 
   .visual { position: relative; aspect-ratio: 1.15; }
   .visual svg { width: 100%; height: 100%; overflow: visible; }
@@ -70,183 +80,337 @@
   .screen { fill: color-mix(in srgb, var(--bg2) 80%, transparent); }
   .ink { fill: none; stroke: url(#g); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 420; stroke-dashoffset: 420; animation: draw 4.2s var(--ease) infinite; }
   .ink.copy { stroke-width: 3.2; animation-delay: .35s; }
-  @keyframes draw { 0% { stroke-dashoffset: 420; opacity: 1; } 55% { stroke-dashoffset: 0; opacity: 1; } 85% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+  @keyframes draw { 0% { stroke-dashoffset: 420; opacity: 1; } 55% { stroke-dashoffset: 0; } 85% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
   .wire { fill: none; stroke: var(--accent); stroke-width: 2; stroke-dasharray: 3 7; animation: flow 1s linear infinite; opacity: .7; }
   @keyframes flow { to { stroke-dashoffset: -20; } }
-  .pen { animation: pen 4.2s var(--ease) infinite; transform-origin: 0 0; }
-  @keyframes pen { 0% { transform: translate(-4px, 22px); } 55% { transform: translate(52px, -6px); } 85%, 100% { transform: translate(52px, -6px); opacity: .0; } }
   .float { animation: float 6s ease-in-out infinite; }
   @keyframes float { 50% { transform: translateY(-8px); } }
 
-  section { padding: 56px 0; }
-  .sec-title { font-size: clamp(1.6rem, 3.6vw, 2.3rem); letter-spacing: -.025em; margin: 0 0 6px; }
-  .sec-lead { color: var(--dim); margin: 0 0 28px; max-width: 38rem; }
+  .marquee { overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--card) 60%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+  .marquee .track { display: flex; gap: 12px; width: max-content; padding: 14px 0; animation: slide 34s linear infinite; }
+  .marquee span { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); font-size: .9rem; color: var(--dim); white-space: nowrap; }
+  .marquee span b { color: var(--fg); font-weight: 600; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  section { padding: 64px 0; }
+  .sec-title { font-size: clamp(1.7rem, 3.8vw, 2.5rem); letter-spacing: -.025em; margin: 0 0 6px; display: inline-block; position: relative; }
+  .sec-title::after { content: ""; position: absolute; left: 0; bottom: -4px; height: 4px; width: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transform: scaleX(0); transform-origin: left; transition: transform 1s var(--ease) .25s; }
+  .no-anim .sec-title::after, .sec-title.in::after { transform: scaleX(1); }
+  .sec-lead { color: var(--dim); margin: 14px 0 30px; max-width: 40rem; }
+
+  .show { display: grid; grid-template-columns: 300px 1fr; gap: 24px; align-items: stretch; }
+  .tabs { display: flex; flex-direction: column; gap: 10px; }
+  .tab { position: relative; overflow: hidden; text-align: left; padding: 16px 18px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); cursor: pointer; font: inherit; color: inherit; transition: border-color .3s, transform .35s var(--ease); }
+  .tab:hover { transform: translateX(3px); }
+  .tab b { display: block; font-size: 1.05rem; }
+  .tab span { color: var(--dim); font-size: .9rem; }
+  .tab.on { border-color: var(--accent); }
+  .tab i { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transform: scaleX(0); transform-origin: left; }
+  .tab.on i { animation: fillbar var(--dur, 5s) linear forwards; }
+  @keyframes fillbar { to { transform: scaleX(1); } }
+  .stage { position: relative; min-height: 340px; border-radius: 22px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); overflow: hidden; }
+  .scene { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; transform: scale(.97); transition: opacity .6s var(--ease), transform .6s var(--ease); pointer-events: none; padding: 20px; }
+  .scene.on { opacity: 1; transform: none; }
+  .scene svg { width: 100%; max-width: 560px; height: auto; overflow: visible; }
+  .scene .cap { position: absolute; left: 20px; right: 20px; bottom: 16px; text-align: center; color: var(--dim); font-size: .92rem; }
+  .scene.on .s-ink { animation: draw 3.6s var(--ease) infinite; }
+  .s-ink { fill: none; stroke: url(#g2); stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 420; stroke-dashoffset: 420; }
+  .scene.on .s-ink.late { animation-delay: .35s; }
+  .typed { font: 600 22px ui-monospace, monospace; fill: var(--fg); }
+  .caret { fill: var(--accent); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .scene.on .reveal-text { animation: typeit 3.6s steps(14) infinite; }
+  @keyframes typeit { 0%, 35% { clip-path: inset(0 100% 0 0); } 75%, 100% { clip-path: inset(0 0 0 0); } }
+  .scene.on .ripple { animation: ripple 1.8s var(--ease) infinite; transform-origin: center; transform-box: fill-box; }
+  @keyframes ripple { 0% { transform: scale(.2); opacity: .9; } 100% { transform: scale(2.6); opacity: 0; } }
+  .scene.on .cursor { animation: cursor 3.6s var(--ease) infinite; }
+  @keyframes cursor { 0% { transform: translate(-60px, 40px); } 45%, 100% { transform: none; } }
+  .win { fill: color-mix(in srgb, var(--accent) 18%, var(--card)); stroke: var(--line); }
+
+  .group { margin-top: 34px; }
+  .group h3 { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; margin: 0 0 14px; }
+  .group h3 .pill { font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--soft); color: var(--accent); text-transform: uppercase; letter-spacing: .06em; }
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+  .feature { position: relative; padding: 20px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); transition: transform .4s var(--ease), border-color .3s, box-shadow .4s var(--ease); transform-style: preserve-3d; will-change: transform; }
+  .feature:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); box-shadow: var(--shadow); }
+  .feature .ico { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--soft); color: var(--accent); margin-bottom: 12px; transition: transform .5s var(--ease); }
+  .feature:hover .ico { transform: translateY(-3px) rotate(-8deg) scale(1.08); }
+  .feature b { display: block; margin-bottom: 4px; font-size: 1.02rem; }
+  .feature span { color: var(--dim); font-size: .93rem; }
+  .feature em { display: inline-block; margin-top: 8px; font-style: normal; font-size: .75rem; font-weight: 600; color: var(--faint); border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; }
 
   .platforms { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
-  .plat { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 22px 20px 20px; border-radius: 20px; background: var(--card); border: 1px solid var(--line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: var(--shadow); transition: transform .45s var(--ease), border-color .3s; }
-  .plat:hover { transform: translateY(-5px); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+  .plat { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 22px 20px 20px; border-radius: 20px; background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow); transition: transform .45s var(--ease), border-color .3s; }
+  .plat:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
   .plat.mine { border-color: var(--accent); }
   .plat .tag { position: absolute; top: -11px; left: 18px; font-size: .74rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: linear-gradient(100deg, var(--accent), var(--accent2)); color: var(--on-accent); }
   .plat .ico { width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; background: var(--soft); color: var(--accent); }
   .plat h3 { margin: 0; font-size: 1.15rem; }
   .plat p { margin: 0; color: var(--dim); font-size: .9rem; flex: 1; }
-  .dl { flex-wrap: wrap; row-gap: 2px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 14px; border-radius: 12px; background: var(--fg); color: var(--bg); font-weight: 600; font-size: .92rem; transition: transform .3s var(--ease), opacity .3s; }
+  .dl { flex-wrap: wrap; row-gap: 2px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 14px; border-radius: 12px; background: var(--fg); color: var(--bg); font-size: .92rem; transition: transform .3s var(--ease); }
   .dl:hover { transform: translateY(-1px); }
   .dl b { font-weight: 600; white-space: nowrap; }
   .dl span { white-space: nowrap; font-weight: 500; opacity: .7; font-size: .8rem; }
   .dl.alt { background: transparent; color: var(--fg); border: 1px solid var(--line); }
   .dl[aria-disabled="true"] { opacity: .45; pointer-events: none; }
-  .hint { font-size: .8rem; color: var(--faint); }
+  .hint { font-size: .85rem; color: var(--faint); }
 
-  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
-  .feature { padding: 20px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
-  .feature .ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--soft); color: var(--accent); margin-bottom: 12px; }
-  .feature b { display: block; margin-bottom: 4px; }
-  .feature span { color: var(--dim); font-size: .93rem; }
-
-  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; counter-reset: s; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; counter-reset: s; position: relative; }
   .step { counter-increment: s; padding: 22px 20px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
-  .step::before { content: counter(s); display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; margin-bottom: 12px; font-weight: 700; color: var(--on-accent); background: linear-gradient(100deg, var(--accent), var(--accent2)); }
+  .step::before { content: counter(s); display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; margin-bottom: 12px; font-weight: 700; color: var(--on-accent); background: linear-gradient(100deg, var(--accent), var(--accent2)); box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--accent) 80%, transparent); }
   .step b { display: block; margin-bottom: 4px; }
   .step span { color: var(--dim); font-size: .93rem; }
 
-  .band { margin: 20px 0 0; padding: 30px; border-radius: 24px; background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 14%, var(--card)), color-mix(in srgb, var(--accent2) 14%, var(--card))); border: 1px solid var(--line); display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; }
+  .band { margin-top: 22px; padding: 30px; border-radius: 24px; background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 14%, var(--card)), color-mix(in srgb, var(--accent2) 14%, var(--card))); border: 1px solid var(--line); display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; }
   .band .ico { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; background: var(--card); color: var(--accent); }
   .band b { font-size: 1.15rem; }
   .band p { margin: 4px 0 0; color: var(--dim); }
 
   footer { padding: 40px 0 50px; color: var(--faint); font-size: .88rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 
-  .anim .reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
+  .anim .reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
   .anim .reveal.in { opacity: 1; transform: none; }
-  .hero .reveal { transition-delay: calc(var(--i, 0) * 90ms); }
 
   @media (max-width: 860px) {
     .hero { grid-template-columns: 1fr; padding-top: 44px; gap: 10px; }
     .visual { max-width: 420px; margin: 0 auto; width: 100%; }
     nav .links { display: none; }
     .band { grid-template-columns: 1fr; }
+    .show { grid-template-columns: 1fr; }
+    .tabs { flex-direction: row; overflow-x: auto; }
+    .tab { flex: 1 0 150px; }
+    .stage { min-height: 300px; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .anim .reveal { opacity: 1; transform: none; }
-    .ink { stroke-dashoffset: 0; }
+    .ink, .s-ink { stroke-dashoffset: 0; }
+    .sec-title::after { transform: scaleX(1); }
   }
 </style>
 </head>
-<body>
+<body class="no-js">
+<div id="progress" aria-hidden="true"></div>
 <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
 
 <nav>
   <div class="wrap">
     <a class="brand" href="#top"><img src="icon.png" alt="">InkBridge <span class="chip" id="ver">latest</span></a>
-    <div class="links"><a href="#download">Download</a><a href="#features">Features</a><a href="#start">How to start</a></div>
+    <div class="links"><a href="#demo">See it</a><a href="#features">Features</a><a href="#start">How to start</a></div>
+    <a class="get" href="#download">Download</a>
   </div>
 </nav>
 
-<main class="wrap" id="top">
-  <header class="hero">
-    <div>
-      <span class="eyebrow reveal" style="--i:0"><span class="dot"></span>Free · No account · No cloud</span>
-      <h1 class="reveal" style="--i:1">Your phone,<br>your computer's <em>pen</em>.</h1>
-      <p class="lead reveal" style="--i:2">Draw, write and control your computer from your phone. Handwriting becomes typed text, the screen comes to your hand, and everything stays between your two devices.</p>
-      <div class="cta reveal" style="--i:3">
-        <a class="btn primary" id="hero-dl" href="#download"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span><span id="hero-label">Download InkBridge</span><small id="hero-sub">Windows · macOS · Linux · Android</small></span></a>
-        <a class="btn ghost" href="#download">All downloads</a>
+<main id="top">
+  <div class="wrap">
+    <header class="hero">
+      <div>
+        <span class="eyebrow reveal"><span class="dot"></span>Free · No account · No cloud</span>
+        <h1 class="reveal">Your phone,<br>your computer's <span class="rotor" id="rotor"><span>pen.</span><span>keyboard.</span><span>remote.</span><span>mouse.</span></span></h1>
+        <p class="lead reveal">Draw, write and control your computer from your phone. Handwriting turns into typed text, your computer's screen comes to your hand, and everything stays between your two devices.</p>
+        <div class="cta reveal">
+          <a class="btn primary" id="hero-dl" href="#download"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span><span id="hero-label">Download InkBridge</span><small id="hero-sub">Windows · macOS · Linux · Android</small></span></a>
+          <a class="btn ghost" href="#demo">See how it works</a>
+        </div>
       </div>
-    </div>
-    <div class="visual reveal" style="--i:2" aria-hidden="true">
-      <svg viewBox="0 0 460 400">
-        <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--accent2)"/></linearGradient></defs>
-        <g class="float">
-          <rect class="dev" x="150" y="60" width="290" height="190" rx="14"/>
-          <rect class="screen" x="164" y="74" width="262" height="162" rx="6"/>
-          <path class="dev" d="M120 262h350l-18 22H138z"/>
-          <path class="ink copy" d="M196 180c22-46 48-70 72-70s26 34 50 34 30-22 46-40"/>
-        </g>
-        <path class="wire" d="M104 250c30 0 40-40 70-52"/>
-        <g class="float" style="animation-delay:-2s">
-          <rect class="dev" x="20" y="150" width="96" height="190" rx="18"/>
-          <rect class="screen" x="30" y="168" width="76" height="152" rx="8"/>
-          <path class="ink" d="M38 262c8-18 18-28 26-28s10 14 18 14 10-8 16-16"/>
-          <g class="pen"><path d="M38 262l6-14 30-30 8 8-30 30z" fill="var(--accent)"/></g>
-        </g>
-      </svg>
-    </div>
-  </header>
+      <div class="visual reveal" aria-hidden="true">
+        <svg viewBox="0 0 460 400">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--accent2)"/></linearGradient>
+            <linearGradient id="g2" x1="0" x2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--teal)"/></linearGradient>
+          </defs>
+          <g class="float">
+            <rect class="dev" x="150" y="60" width="290" height="190" rx="14"/>
+            <rect class="screen" x="164" y="74" width="262" height="162" rx="6"/>
+            <path class="dev" d="M120 262h350l-18 22H138z"/>
+            <path class="ink copy" d="M196 180c22-46 48-70 72-70s26 34 50 34 30-22 46-40"/>
+          </g>
+          <path class="wire" d="M104 250c30 0 40-40 70-52"/>
+          <g class="float" style="animation-delay:-2s">
+            <rect class="dev" x="20" y="150" width="96" height="190" rx="18"/>
+            <rect class="screen" x="30" y="168" width="76" height="152" rx="8"/>
+            <path class="ink" d="M38 262c8-18 18-28 26-28s10 14 18 14 10-8 16-16"/>
+          </g>
+        </svg>
+      </div>
+    </header>
+  </div>
 
-  <section id="download">
-    <h2 class="sec-title reveal">Download</h2>
-    <p class="sec-lead reveal">Install it on your computer first, then on your phone, or just open the web page your computer shows. Every download comes straight from here; installed copies update themselves.</p>
-    <div class="platforms">
-      <article class="plat reveal" data-os="windows">
-        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5 10.5 4.5v7H3zM11.5 4.4 21 3v8.5h-9.5zM3 12.5h7.5v7L3 18.5zM11.5 12.5H21V21l-9.5-1.4z"/></svg></div>
-        <h3>Windows</h3>
-        <p>Windows 10 and 11. If SmartScreen appears: More info → Run anyway.</p>
-        <a class="dl" data-file="-setup\.exe$" aria-disabled="true"><b>Download .exe</b> <span>—</span></a>
-      </article>
-      <article class="plat reveal" data-os="mac">
-        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 19h20"/></svg></div>
-        <h3>macOS</h3>
-        <p>macOS 11 or later, Apple chip and Intel. First open: Privacy &amp; Security → Open Anyway.</p>
-        <a class="dl" data-file="\.dmg$" aria-disabled="true"><b>Download .dmg</b> <span>—</span></a>
-      </article>
-      <article class="plat reveal" data-os="linux">
-        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 15h4"/></svg></div>
-        <h3>Linux</h3>
-        <p>The .deb for Ubuntu, Debian and Mint sets up the pen by itself; the AppImage runs anywhere.</p>
-        <a class="dl" data-file="\.deb$" aria-disabled="true"><b>Download .deb</b> <span>—</span></a>
-        <a class="dl alt" data-file="\.AppImage$" aria-disabled="true"><b>AppImage</b> <span>—</span></a>
-      </article>
-      <article class="plat reveal" data-os="android">
-        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
-        <h3>Android</h3>
-        <p>Android 10 or later. Allow installing apps from your browser when asked. Or use the web page.</p>
-        <a class="dl" data-file="\.apk$" aria-disabled="true"><b>Download .apk</b> <span>—</span></a>
-      </article>
-      <article class="plat reveal" data-os="iphone">
-        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 5h4"/></svg></div>
-        <h3>iPhone</h3>
-        <p>Nothing to install: on your computer choose Pair → Web page and scan its code. Add it to your Home Screen and it opens like an app.</p>
-        <a class="dl alt" href="#start"><b>How it works</b> <span>↓</span></a>
-      </article>
+  <div class="marquee" aria-hidden="true">
+    <div class="track">
+      <span><b>Windows</b> 10 &amp; 11</span><span><b>macOS</b> Apple chip &amp; Intel</span><span><b>Linux</b> .deb &amp; AppImage</span><span><b>Android</b> app or web page</span><span><b>iPhone</b> web page</span><span><b>USB cable</b></span><span><b>Wi-Fi</b></span><span><b>Tailscale</b> anywhere</span><span><b>Encrypted</b> end to end</span><span><b>Updates</b> itself</span>
+      <span><b>Windows</b> 10 &amp; 11</span><span><b>macOS</b> Apple chip &amp; Intel</span><span><b>Linux</b> .deb &amp; AppImage</span><span><b>Android</b> app or web page</span><span><b>iPhone</b> web page</span><span><b>USB cable</b></span><span><b>Wi-Fi</b></span><span><b>Tailscale</b> anywhere</span><span><b>Encrypted</b> end to end</span><span><b>Updates</b> itself</span>
     </div>
-    <p class="hint reveal" id="dl-note" style="margin-top:14px"></p>
-  </section>
+  </div>
 
-  <section id="features">
-    <h2 class="sec-title reveal">What it does</h2>
-    <p class="sec-lead reveal">One app on your computer, your phone in your hand.</p>
-    <div class="features">
-      <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 20 4-1 11-11-3-3L5 16z"/></svg></div><b>Pen tablet</b><span>Draw and sign on your computer with your phone, with stylus pressure.</span></div>
-      <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M9 19h6M12 5v14"/></svg></div><b>Handwriting → text</b><span>Write on the phone; the words are typed into whatever app is open.</span></div>
-      <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div><b>Screen remote</b><span>See your computer live on the phone; tap, scroll, drag and type.</span></div>
-      <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v9M6.3 7.3a8 8 0 1 0 11.4 0"/></svg></div><b>Laptop menu</b><span>Lock, sleep, shut down, set it to turn on and off, and unlock with your fingerprint.</span></div>
-      <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg></div><b>Files &amp; clipboard</b><span>Send files and copied text both ways in a tap.</span></div>
-      <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></div><b>Alerts</b><span>Battery, charger, lid and "someone touched it" alerts, even with the page closed.</span></div>
-    </div>
-  </section>
+  <div class="wrap">
+    <section id="demo">
+      <h2 class="sec-title reveal">See it in action</h2>
+      <p class="sec-lead reveal">Three ways to use your phone with your computer. Switch between them any time from the top of the phone screen.</p>
+      <div class="show reveal">
+        <div class="tabs" role="tablist">
+          <button class="tab on" role="tab" data-scene="pen"><b>Pen</b><span>Your phone becomes a drawing tablet.</span><i></i></button>
+          <button class="tab" role="tab" data-scene="write"><b>Write</b><span>Handwriting turns into typed text.</span><i></i></button>
+          <button class="tab" role="tab" data-scene="screen"><b>Screen</b><span>See and control your computer.</span><i></i></button>
+        </div>
+        <div class="stage">
+          <div class="scene on" data-scene="pen">
+            <svg viewBox="0 0 560 280" aria-hidden="true">
+              <rect class="dev" x="20" y="40" width="110" height="210" rx="18"/><rect class="screen" x="31" y="58" width="88" height="174" rx="8"/>
+              <path class="s-ink" d="M44 170c10-30 22-46 32-46s12 22 22 22 12-12 18-26"/>
+              <path class="wire" d="M138 150c40 0 60-20 96-20"/>
+              <rect class="dev" x="240" y="30" width="300" height="190" rx="14"/><rect class="screen" x="254" y="44" width="272" height="162" rx="6"/>
+              <path class="s-ink late" d="M290 160c26-56 56-82 84-82s30 40 58 40 34-26 54-48"/>
+              <path class="dev" d="M214 232h352l-18 20H232z"/>
+            </svg>
+            <div class="cap">Draw or sign on the phone; the stroke appears on your computer, with pressure from a stylus.</div>
+          </div>
+          <div class="scene" data-scene="write">
+            <svg viewBox="0 0 560 280" aria-hidden="true">
+              <rect class="dev" x="20" y="40" width="110" height="210" rx="18"/><rect class="screen" x="31" y="58" width="88" height="174" rx="8"/>
+              <path class="s-ink" d="M40 150c6-16 10-22 14-22s2 24 8 24 6-26 12-26 2 26 8 26 8-18 14-28M100 140c4 0 8 4 8 10"/>
+              <path class="wire" d="M138 150c40 0 60-20 96-20"/>
+              <rect class="dev" x="240" y="30" width="300" height="190" rx="14"/><rect class="screen" x="254" y="44" width="272" height="162" rx="6"/>
+              <rect x="276" y="70" width="228" height="10" rx="5" fill="var(--line)"/><rect x="276" y="90" width="170" height="10" rx="5" fill="var(--line)"/>
+              <g class="reveal-text"><text class="typed" x="276" y="140">meeting at noon</text></g>
+              <rect class="caret" x="478" y="122" width="3" height="24" rx="1"/>
+              <path class="dev" d="M214 232h352l-18 20H232z"/>
+            </svg>
+            <div class="cap">Write a word, pause, and it is typed into whatever is open on your computer. Other readings are one tap away.</div>
+          </div>
+          <div class="scene" data-scene="screen">
+            <svg viewBox="0 0 560 280" aria-hidden="true">
+              <rect class="dev" x="240" y="30" width="300" height="190" rx="14"/><rect class="screen" x="254" y="44" width="272" height="162" rx="6"/>
+              <rect class="win" x="272" y="62" width="150" height="96" rx="8"/><rect class="win" x="380" y="104" width="128" height="84" rx="8"/>
+              <path class="dev" d="M214 232h352l-18 20H232z"/>
+              <path class="wire" d="M138 150c40 0 60-20 96-20"/>
+              <rect class="dev" x="20" y="40" width="110" height="210" rx="18"/><rect class="screen" x="31" y="58" width="88" height="174" rx="8"/>
+              <rect class="win" x="36" y="96" width="50" height="34" rx="4"/><rect class="win" x="72" y="112" width="42" height="30" rx="4"/>
+              <circle class="ripple" cx="60" cy="112" r="10" fill="var(--accent)" opacity=".6"/>
+              <g class="cursor"><path d="M440 120l0 22 6-6 5 11 4-2-5-11 8 0z" fill="var(--fg)" stroke="var(--bg)" stroke-width="1.5"/></g>
+            </svg>
+            <div class="cap">Your computer's screen, live on the phone: tap to click, hold to right-click, swipe to scroll, and type with either keyboard.</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <section id="start">
-    <h2 class="sec-title reveal">How to start</h2>
-    <p class="sec-lead reveal">About two minutes, once.</p>
-    <div class="steps">
-      <div class="step reveal"><b>Install on your computer</b><span>Pick your system above and open the download.</span></div>
-      <div class="step reveal"><b>Choose Pair</b><span>InkBridge shows a QR code and a 6-digit code.</span></div>
-      <div class="step reveal"><b>Scan it with your phone</b><span>The Android app, or simply the web page it opens: nothing to install on iPhone.</span></div>
-    </div>
-    <div class="band reveal">
-      <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
-      <div><b>Private by design</b><p>No account and no cloud. Your phone talks straight to your computer over a USB cable, your Wi-Fi or Tailscale, encrypted end to end.</p></div>
-    </div>
-  </section>
+    <section id="features">
+      <h2 class="sec-title reveal">Everything it does</h2>
+      <p class="sec-lead reveal">In plain words. Most of it works from the web page too; the few things that need the Android app say so.</p>
 
-  <footer><span id="foot-ver">InkBridge</span><span>No account · No cloud · Updates itself</span></footer>
+      <div class="group">
+        <h3 class="reveal"><span class="pill">Create</span>Draw and write</h3>
+        <div class="features">
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 20 4-1 11-11-3-3L5 16z"/></svg></div><b>Pen tablet</b><span>Use the phone like a drawing tablet for any app on your computer. Great for signing documents and sketching.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M9 19h6M12 5v14"/></svg></div><b>Handwriting into text</b><span>Write with your finger; InkBridge reads it and types the words into the app that's open, like a keyboard.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9M3 4v5h5"/></svg></div><b>Undo and alternatives</b><span>Typed the wrong word? Undo it, or tap one of the other readings it offers.</span></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3 class="reveal"><span class="pill">Control</span>Use your computer from the sofa</h3>
+        <div class="features">
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div><b>Screen on your phone</b><span>See your computer's screen live and use it: tap to click, hold to right-click, drag, and swipe to scroll.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg></div><b>Keyboard and shortcuts</b><span>A full computer keyboard on the phone, your phone's own keyboard, and one-tap buttons for copy, paste, undo and switching windows.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg></div><b>Volume and windows</b><span>Change the volume, mute the microphone, and jump straight to any open window from a list.</span></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3 class="reveal"><span class="pill">Look after it</span>Your laptop, from your pocket</h3>
+        <div class="features">
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v9M6.3 7.3a8 8 0 1 0 11.4 0"/></svg></div><b>Lock, sleep, restart, shut down</b><span>One tap from the phone menu, wherever you are in the room.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0"/></svg></div><b>Unlock with your fingerprint</b><span>Unlock the computer by confirming with your phone's fingerprint or face.</span><em>Linux &amp; Windows</em></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><b>Turns on and off by itself</b><span>Set when the laptop wakes up in the morning and shuts down at night, and change it from the phone.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg></div><b>Alerts on your phone</b><span>Charger unplugged, battery low, lid opened, going to sleep: the phone tells you, even with the page closed.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></svg></div><b>Distance mode</b><span>Leaving the laptop for a bit? If someone touches its keyboard, touchpad or lid, your phone knows right away.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="12" rx="2"/><path d="M8 7V5h8v2"/></svg></div><b>Travel mode</b><span>Laptop in your bag on your phone's hotspot: it saves battery, stays cool and keeps working with the lid closed.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 11a5 5 0 0 0-10 0v4l-2 3h14l-2-3z"/><path d="M4 4l16 16"/></svg></div><b>Locks when you walk away</b><span>Walk off with your phone and the laptop locks itself after a few seconds.</span><em>Android app</em></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3 class="reveal"><span class="pill">Share</span>Between phone and computer</h3>
+        <div class="features">
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 18v-6M9 15l3 3 3-3"/></svg></div><b>Files both ways</b><span>Send a photo or document to the computer, or pick any file on the computer and get it on your phone.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/></svg></div><b>Shared clipboard</b><span>Copy on one, paste on the other. Text you copy moves across in a tap.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><rect x="2" y="16" width="5" height="6" rx="2"/><rect x="17" y="16" width="5" height="6" rx="2"/></svg></div><b>Phone as headset</b><span>Hear your computer's calls and sound on the phone and talk through it.</span><em>Android app</em></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <h3 class="reveal"><span class="pill">Connect</span>Anywhere, privately</h3>
+        <div class="features">
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 20h.01"/></svg></div><b>Cable, Wi-Fi or away from home</b><span>A USB cable, your home Wi-Fi, or Tailscale when you're out: it picks the best way by itself.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div><b>Web page, no app needed</b><span>On iPhone, or any phone, just scan the code: your computer serves a page that works like an app.</span></div>
+          <div class="feature reveal"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></svg></div><b>Updates by itself</b><span>New versions download and install on their own, only the one for your system, checked before installing.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="download">
+      <h2 class="sec-title reveal">Download</h2>
+      <p class="sec-lead reveal">Install it on your computer first. Then use the Android app, or just open the web page your computer shows. Every download starts right here.</p>
+      <div class="platforms">
+        <article class="plat reveal" data-os="windows">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5 10.5 4.5v7H3zM11.5 4.4 21 3v8.5h-9.5zM3 12.5h7.5v7L3 18.5zM11.5 12.5H21V21l-9.5-1.4z"/></svg></div>
+          <h3>Windows</h3>
+          <p>Windows 10 and 11. If SmartScreen appears: More info → Run anyway.</p>
+          <a class="dl" data-file="-setup\.exe$" aria-disabled="true"><b>Download .exe</b> <span>—</span></a>
+        </article>
+        <article class="plat reveal" data-os="mac">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 19h20"/></svg></div>
+          <h3>macOS</h3>
+          <p>macOS 11 or later, Apple chip and Intel. First open: Privacy &amp; Security → Open Anyway.</p>
+          <a class="dl" data-file="\.dmg$" aria-disabled="true"><b>Download .dmg</b> <span>—</span></a>
+        </article>
+        <article class="plat reveal" data-os="linux">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 15h4"/></svg></div>
+          <h3>Linux</h3>
+          <p>The .deb for Ubuntu, Debian and Mint sets up the pen by itself; the AppImage runs anywhere.</p>
+          <a class="dl" data-file="\.deb$" aria-disabled="true"><b>Download .deb</b> <span>—</span></a>
+          <a class="dl alt" data-file="\.AppImage$" aria-disabled="true"><b>AppImage</b> <span>—</span></a>
+        </article>
+        <article class="plat reveal" data-os="android">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+          <h3>Android</h3>
+          <p>Android 10 or later. Allow installing apps from your browser when asked. Or use the web page.</p>
+          <a class="dl" data-file="\.apk$" aria-disabled="true"><b>Download .apk</b> <span>—</span></a>
+        </article>
+        <article class="plat reveal" data-os="iphone">
+          <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 5h4"/></svg></div>
+          <h3>iPhone</h3>
+          <p>Nothing to install: on your computer choose Pair → Web page and scan its code. Add it to your Home Screen and it opens like an app.</p>
+          <a class="dl alt" href="#start"><b>How it works</b> <span>↓</span></a>
+        </article>
+      </div>
+      <p class="hint reveal" id="dl-note" style="margin-top:14px"></p>
+    </section>
+
+    <section id="start">
+      <h2 class="sec-title reveal">How to start</h2>
+      <p class="sec-lead reveal">About two minutes, once.</p>
+      <div class="steps">
+        <div class="step reveal"><b>Install on your computer</b><span>Pick your system above and open the download.</span></div>
+        <div class="step reveal"><b>Choose Pair</b><span>InkBridge shows a QR code and a 6-digit code.</span></div>
+        <div class="step reveal"><b>Scan it with your phone</b><span>The Android app, or simply the web page it opens: nothing to install on iPhone.</span></div>
+      </div>
+      <div class="band reveal">
+        <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <div><b>Private by design</b><p>No account and no cloud. Your phone talks straight to your computer over a USB cable, your Wi-Fi or Tailscale, encrypted end to end.</p></div>
+      </div>
+    </section>
+
+    <footer><span id="foot-ver">InkBridge</span><span>No account · No cloud · Updates itself</span></footer>
+  </div>
 </main>
 
 <script>
   (function () {
     var REPO = "D9-cell/inkbridge-releases";
+    var still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.body.classList.remove("no-js");
     var ua = navigator.userAgent, platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
     var iphone = /iPhone|iPad|iPod/.test(ua) || (platform === "MacIntel" && navigator.maxTouchPoints > 1);
     var os = iphone ? "iphone" : /Android/.test(ua) ? "android" : /Win/.test(platform) ? "windows" : /Mac/.test(platform) ? "mac" : /Linux|X11/.test(platform) ? "linux" : "";
@@ -289,25 +453,77 @@
         document.getElementById("hero-sub").textContent = "No download needed";
       }
     }
-
     fetch("https://api.github.com/repos/" + REPO + "/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(fill)
-      .catch(function () {
-        document.getElementById("dl-note").textContent = "The first version is on its way. Check back in a little while.";
-      });
+      .catch(function () { document.getElementById("dl-note").textContent = "The first version is on its way. Check back in a little while."; });
 
-    // Fades sections in as they come into view; content is only hidden once this script runs.
+    // Cycles the last word of the headline.
+    var words = [].slice.call(document.querySelectorAll("#rotor span")), w = 0;
+    if (!still) {
+      document.getElementById("rotor").classList.add("live");
+      words[0].classList.add("on");
+      setInterval(function () {
+        words[w].classList.remove("on");
+        words[w].classList.add("off");
+        var prev = w;
+        setTimeout(function () { words[prev].classList.remove("off"); }, 650);
+        w = (w + 1) % words.length;
+        words[w].classList.add("on");
+      }, 2400);
+    }
+
+    // Runs the demo: each tab shows its scene for a while, then the next; a click jumps to one.
+    var tabs = [].slice.call(document.querySelectorAll(".tab")), scenes = [].slice.call(document.querySelectorAll(".scene"));
+    var DUR = 5200, current = 0, timer = 0;
+    function show(i) {
+      current = i;
+      tabs.forEach(function (t, j) {
+        t.classList.toggle("on", j === i);
+        t.setAttribute("aria-selected", j === i);
+        var bar = t.querySelector("i");
+        bar.style.animation = "none";
+        void bar.offsetWidth;
+        bar.style.animation = "";
+        t.style.setProperty("--dur", DUR + "ms");
+      });
+      scenes.forEach(function (s) { s.classList.toggle("on", s.dataset.scene === tabs[i].dataset.scene); });
+      clearTimeout(timer);
+      if (!still) timer = setTimeout(function () { show((current + 1) % tabs.length); }, DUR);
+    }
+    tabs.forEach(function (t, i) { t.addEventListener("click", function () { show(i); }); });
+    show(0);
+
+    // Tilts a feature card a little toward the pointer.
+    if (!still && matchMedia("(hover: hover)").matches) {
+      document.querySelectorAll(".feature, .plat").forEach(function (c) {
+        c.addEventListener("pointermove", function (e) {
+          var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+          c.style.transition = "transform .15s ease-out";
+          c.style.transform = "perspective(700px) rotateY(" + (x * 6) + "deg) rotateX(" + (-y * 6) + "deg) translateY(-4px)";
+        });
+        c.addEventListener("pointerleave", function () { c.style.transition = "transform .5s cubic-bezier(.2, .7, .1, 1)"; c.style.transform = ""; });
+      });
+    }
+
+    // Fills the progress bar and reveals sections as they come into view; content is only hidden once this script runs.
+    var bar = document.getElementById("progress");
     var pending = [].slice.call(document.querySelectorAll(".reveal"));
-    pending.forEach(function (el, i) { if (!el.closest(".hero")) el.style.transitionDelay = (i % 3) * 80 + "ms"; });
+    var groupIndex = new Map();
+    pending.forEach(function (el) {
+      var parent = el.parentNode, n = groupIndex.get(parent) || 0;
+      el.style.transitionDelay = Math.min(n, 6) * 70 + "ms";
+      groupIndex.set(parent, n + 1);
+    });
     document.documentElement.classList.add("anim");
     function check() {
-      var edge = window.innerHeight * 0.92;
+      var max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.transform = "scaleX(" + (max > 0 ? scrollY / max : 0) + ")";
+      var edge = innerHeight * 0.92;
       pending = pending.filter(function (el) {
         if (el.getBoundingClientRect().top < edge) { el.classList.add("in"); return false; }
         return true;
       });
-      if (!pending.length) { removeEventListener("scroll", check); removeEventListener("resize", check); }
     }
     addEventListener("scroll", check, { passive: true });
     addEventListener("resize", check);
