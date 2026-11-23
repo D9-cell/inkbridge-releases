@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InkBridge download</title>
+<meta name="description" content="Your phone as a pen, handwriting keyboard and screen remote for your computer.">
+<link rel="icon" type="image/png" href="icon.png">
+<style>
+  :root { color-scheme: light dark; --bg: #f6f7fb; --fg: #16181d; --dim: #5f636b; --card: #ffffff; --line: #e4e6ee; --accent: #2848c8; --on-accent: #fff; --soft: #eef1fc; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #0f1117; --fg: #eef0f5; --dim: #a3a8b4; --card: #181b23; --line: #2a2f3a; --accent: #8ea4ff; --on-accent: #0d1430; --soft: #1d2440; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: radial-gradient(1200px 500px at 50% -10%, var(--soft), var(--bg)); color: var(--fg); font: 17px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; min-height: 100vh; }
+  main { max-width: 44rem; margin: 0 auto; padding: 56px 16px 48px; text-align: center; }
+  .icon { width: 96px; height: 96px; border-radius: 22px; box-shadow: 0 12px 32px color-mix(in srgb, var(--accent) 30%, transparent); }
+  h1 { font-size: clamp(2rem, 6vw, 2.8rem); margin: 18px 0 6px; letter-spacing: -0.02em; }
+  .lead { color: var(--dim); margin: 0 auto 28px; max-width: 32rem; }
+  .get { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; padding: 16px 32px; border-radius: 16px; background: var(--accent); color: var(--on-accent); text-decoration: none; font-weight: 650; font-size: 1.1rem; box-shadow: 0 10px 28px color-mix(in srgb, var(--accent) 35%, transparent); transition: transform .15s ease; }
+  .get:hover { transform: translateY(-2px); }
+  .get small { font-weight: 450; opacity: .85; font-size: .85rem; }
+  .note { color: var(--dim); font-size: .92rem; margin: 14px auto 0; max-width: 32rem; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; margin-top: 36px; text-align: left; }
+  .card h2 { font-size: 1rem; margin: 0 0 10px; }
+  .card ul { list-style: none; margin: 0; padding: 0; }
+  .card li { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); }
+  .card li:first-child { border-top: 0; }
+  .card a { color: var(--accent); text-decoration: none; font-weight: 550; }
+  .card span { color: var(--dim); font-size: .9rem; white-space: nowrap; }
+  footer { color: var(--dim); font-size: .85rem; margin-top: 32px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <img class="icon" src="icon.png" alt="">
+  <h1>InkBridge</h1>
+  <p class="lead">Your phone as a pen, handwriting keyboard and screen remote for your computer. No account, no cloud: the phone talks to your computer directly.</p>
+  <a id="get" class="get" href="https://github.com/D9-cell/inkbridge-releases/releases/latest"><span id="get-label">Download InkBridge</span><small id="get-sub">Looking for the latest version…</small></a>
+  <p id="note" class="note"></p>
+  <section class="card">
+    <h2>Other downloads</h2>
+    <ul id="others"><li><a href="https://github.com/D9-cell/inkbridge-releases/releases/latest">All files on the release page</a><span></span></li></ul>
+  </section>
+  <footer id="version"></footer>
+</main>
+<script>
+  (function () {
+    var REPO = "D9-cell/inkbridge-releases";
+    var ua = navigator.userAgent, platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+    var iphone = /iPhone|iPad|iPod/.test(ua) || (platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var android = /Android/.test(ua);
+    var os = iphone ? "iphone" : android ? "android" : /Win/.test(platform) ? "windows" : /Mac/.test(platform) ? "mac" : /Linux|X11/.test(platform) ? "linux" : "other";
+    var KINDS = [
+      { os: "windows", name: "Windows 10 and 11", test: /-setup\.exe$/, note: "If Windows SmartScreen appears, choose More info → Run anyway; InkBridge isn't signed by Microsoft." },
+      { os: "mac", name: "macOS 11 or later (Apple chip and Intel)", test: /\.dmg$/, note: "Open the disk image and drag InkBridge to Applications. On first open: System Settings → Privacy & Security → Open Anyway." },
+      { os: "linux", name: "Linux: Ubuntu, Debian, Mint (.deb)", test: /\.deb$/, note: "Open it with Software Install, or run: sudo apt install ./" },
+      { os: "linux-appimage", name: "Linux: any distribution (AppImage)", test: /\.AppImage$/, note: "Make it executable and run it. The .deb is recommended where it fits: it sets up the pen and keyboard by itself." },
+      { os: "android", name: "Android phone (APK)", test: /\.apk$/, note: "Allow your browser to install apps when Android asks. Or skip the app: the web page works too." }
+    ];
+    function size(b) { return (b / 1048576).toFixed(0) + " MB"; }
+    function show(asset, kind) {
+      document.getElementById("get").href = asset.browser_download_url;
+      document.getElementById("get-label").textContent = "Download for " + kind.name.split(":")[0].replace(/ \(.*/, "");
+      document.getElementById("get-sub").textContent = kind.name + " · " + size(asset.size);
+      document.getElementById("note").textContent = kind.note + (kind.os === "linux" ? asset.name : "");
+    }
+    if (iphone) {
+      document.getElementById("get").hidden = true;
+      document.getElementById("note").textContent = "On iPhone there's nothing to download. Install InkBridge on your computer, choose Pair → Web page there, and scan its code: the page opens in Safari and goes on your Home Screen like an app.";
+    }
+    fetch("https://api.github.com/repos/" + REPO + "/releases/latest", { headers: { Accept: "application/vnd.github+json" } }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function (rel) {
+      document.getElementById("version").textContent = "Version " + rel.tag_name.replace(/^v/, "") + " · " + new Date(rel.published_at).toLocaleDateString();
+      var list = document.getElementById("others");
+      list.textContent = "";
+      var mine = null;
+      KINDS.forEach(function (k) {
+        var a = rel.assets.filter(function (x) { return k.test.test(x.name); })[0];
+        if (!a) return;
+        if (!mine && (k.os === os || (os === "linux" && k.os === "linux-appimage"))) mine = { a: a, k: k };
+        var li = document.createElement("li"), link = document.createElement("a"), s = document.createElement("span");
+        link.href = a.browser_download_url;
+        link.textContent = k.name;
+        s.textContent = size(a.size);
+        li.append(link, s);
+        list.append(li);
+      });
+      if (mine && !iphone) show(mine.a, mine.k);
+      else if (!iphone) document.getElementById("get-sub").textContent = "Pick your system below";
+    }).catch(function () {
+      document.getElementById("get-sub").textContent = "Open the release page";
+    });
+  })();
+</script>
+</body>
+</html>
